@@ -77,13 +77,19 @@ def download_from_kaggle():
 
 def verify_dataset():
     """Verify that dataset was downloaded correctly."""
-    dataset_path = Path('data/raw/PlantVillage')
+    # Check for the actual downloaded folder structure
+    dataset_path = Path('data/raw/plantvillage dataset/color')
     
     if not dataset_path.exists():
-        print("❌ Dataset folder not found at data/raw/PlantVillage")
-        return False
+        # Try alternative path
+        alt_path = Path('data/raw/PlantVillage')
+        if alt_path.exists():
+            dataset_path = alt_path
+        else:
+            print("❌ Dataset folder not found")
+            return False
     
-    # Count classes (should be 38)
+    # Count classes
     classes = [d for d in dataset_path.iterdir() if d.is_dir()]
     
     if len(classes) == 0:
@@ -91,6 +97,7 @@ def verify_dataset():
         return False
     
     print(f"✅ Dataset verified!")
+    print(f"   Location: {dataset_path}")
     print(f"   Found {len(classes)} disease classes")
     
     # Count total images
